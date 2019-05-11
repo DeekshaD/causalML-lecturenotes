@@ -2,3 +2,15 @@
 .Rhistory
 .RData
 .Ruserdata
+/*.pdf
+_cache
+_site
+cache
+temp.Rmd
+*.html
+*_cache
+*_files
+figures
+_book
+_main.*
+causalml-source.zip
