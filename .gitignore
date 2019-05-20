@@ -14,3 +14,5 @@ figures
 _book
 _main.*
 causalml-source.zip
+rsconnect/*
+docs/rsconnect/*
