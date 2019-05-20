@@ -13,6 +13,11 @@ jupyter:
     name: python3
 ---
 
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.path="fig/")
+```
+
 ```{r, echo=FALSE}
 library(reticulate)
 use_virtualenv('venv', require=TRUE)
@@ -71,7 +76,7 @@ Here you have the total number of Y variables itself being a random variable X. 
 
 PPLs are more flexible than BNs, but the trade-off s that getting inference to work is harder.   PPL's develop several abstractions for inference and leave it to the user to apply them, requiring the user to become something of an expert in inference algorithms.  PPL developers make design decisions to make inference easier for the user, though this often sacrifices some flexibility.  One emergent pattern is to build PPLs on tensor-based frameworks like Tensorflow and PyTorch.  Tensor-based PPLs allow a data scientist with experience building deep learning models to rely on that experience when doing inference.
 
-![Image](inference.png)
+![Image](fig/inference.png)
 
 [$$\texttt{Kevin Smith - Tutorial: Probabilistic Programming}$$](https://www.youtube.com/watch?v=9SEIYh5BCjc)
 
@@ -173,7 +178,7 @@ conditioned_scale = pyro.condition(scale, data={"measurement": torch.tensor(14.)
 
 2. Set the prior and infer the posterior. We will use 
 
-```{python}
+```{python, 03_weight}
 from pyro.infer.mcmc import MCMC
 from pyro.infer.mcmc.nuts import HMC
 from pyro.infer import EmpiricalMarginal
@@ -255,7 +260,7 @@ Note that we always count from the right by using negative indices like $-2$, $-
 
 ### Gaussian Mixture Model
 
-![Image](gmm.png)
+![Image](fig/gmm.png)
 [$$\texttt{Blei - Build, Compute, Critique, Repeat:Data Analysis with Latent Variable Models}$$](http://www.cs.columbia.edu/~blei/papers/Blei2014b.pdf)
 
 ```{python}
@@ -316,7 +321,7 @@ So we have to directly approximate $p(Z \mid X)$. There are two ways of approxim
 
 We can't compute $p(Z \mid X)$ directly, so let's approximate with some other distribution $q(Z; \nu)$ over Z that is tractable (for example, Gaussions or other exponential family).
 
-![Image](vi.png)
+![Image](fig/VI.png)
 
 [$$\texttt{David Blei - Variational Inference (NeurIPS 2016 Tutorial)}$$](https://www.youtube.com/watch?v=ogdv_6dbvVQ)
 
@@ -432,7 +437,7 @@ for i in range(200):
     print('.' if i % 100 else '\n', end='')
 ```
 
-```{python}
+```{python, 03_covergence}
 pyplot.figure(figsize=(10,3), dpi=100).set_facecolor('white')
 pyplot.plot(losses)
 pyplot.xlabel('iters')
@@ -451,7 +456,7 @@ print('locs = {}'.format(locs.data.numpy()))
 print('scale = {}'.format(scale.data.numpy()))
 ```
 
-```{python}
+```{python, 03_mixture}
 X = np.arange(-3,15,0.1)
 Y1 = weights[0].item() * scipy.stats.norm.pdf((X - locs[0].item()) / scale.item())
 Y2 = weights[1].item() * scipy.stats.norm.pdf((X - locs[1].item()) / scale.item())
