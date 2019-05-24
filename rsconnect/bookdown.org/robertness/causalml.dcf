@@ -1,0 +1,13 @@
+name: causalml
+title:
+username: robertness
+account: robertness
+server: bookdown.org
+hostUrl: https://bookdown.org/__api__
+appId: 2584
+bundleId: 10308
+url: https://bookdown.org/robertness/causalml/
+when: 1558562873.10857
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: _bookdown.yml|.Rbuildignore|01-class_overview.Rmd|02-bnlearn_tutorial.Rmd|03-pyro_tutorial.Rmd|04-causal_models_as_generative_ml.Rmd|index.Rmd|LICENSE|presentation_scatch.md|presentation_scatch.Rpres|README.html|README.md|data/survey.txt|presentation_scatch-figure/unnamed-chunk-2-1.png|_book|_bookdown_files|fig|venv
