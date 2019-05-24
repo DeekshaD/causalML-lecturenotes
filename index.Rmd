@@ -1,12 +1,11 @@
 ---
-title: "Lecture Notes for CS 7290 Causality in Machine Learning"
+title: "Lecture Notes for Causality in Machine Learning"
 site: bookdown::bookdown_site
 documentclass: book
 output:
   bookdown::gitbook: default
 ---
 
-# Introduction
+## NEU Khoury College CS 7290: Summer 2019
 
-See [syllabus](https://github.com/robertness/causalML).
-
+These are lecture notes for an ongoing [course](https://github.com/robertness/causalML) on causal inference and modeling in machine learning, taught by Dr. Robert O. Ness.  These notes are a work in progress, created as the course progresses.  They are created by the instructor, the course TA's [Kaushal Paneri](https://www.linkedin.com/in/kaushalpaneri/) and Sicheng Hao, and the Summer 2019 students of this course.
