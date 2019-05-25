@@ -2,10 +2,12 @@
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r, 02_setup,include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.path="fig/")
 ```
 # Tutorial probabilistic modeling with Bayesian networks and bnlearn
+Lecture notes by Sara Taheri
 
 ## Installing bnlearn
 
@@ -24,7 +26,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("Rgraphviz")
 ```
 
-```{r, fig.height=7, fig.width =7, echo=FALSE, fig.align='center', message=FALSE}
+```{r, 02_install, fig.height=7, fig.width =7, echo=FALSE, fig.align='center', message=FALSE}
 library(png)
 library(grid)
 library(Rgraphviz)
@@ -34,7 +36,7 @@ grid.raster(img)
 
 Then type “bnlearn” in the window that appears and click on the install button. Do the same thing for the other package.
 
-```{r, fig.height=4, fig.width =4, echo=FALSE, fig.align='center'}
+```{r, 02_installPackWindow, fig.height=4, fig.width =4, echo=FALSE, fig.align='center'}
 img <- readPNG("./fig/installPackWindow.png")
 grid.raster(img)
 ```
@@ -67,7 +69,7 @@ We can represent the relationships between the variables in the survey data by a
 
 In bnlearn, we can graphically represent the relationships between variables in survey data like this:
 
-```{r, fig.width=3, fig.height=3, fig.align='center'}
+```{r, 02_survey_dag, fig.width=3, fig.height=3, fig.align='center'}
 # empty graph
 library(bnlearn)
 dag <- empty.graph(nodes = c("A","S","E","O","R","T"))
@@ -90,13 +92,13 @@ In this section we discuss the ways that we can visually demonstrate Bayesian ne
 
 You can either use the simple **plot** function or use the **graphviz.plot** function from **Rgraphviz** package.
 
-```{r}
+```{r, 02_plot_dag}
 # plot dag with plot function
 plot(dag)
 ```
 
 
-```{r, fig.width=4, fig.height=4, fig.align='center'}
+```{r, 02_layouts, fig.width=4, fig.height=4, fig.align='center'}
 # plot dag with graphviz.plot function. Default layout is dot
 graphviz.plot(dag, layout = "dot")
 # plot dag with graphviz.plot function. change layout to "fdp"
@@ -111,7 +113,7 @@ If you want to change the color of the nodes or the edges of your graph, you can
 
 Let's assume that we want to change the color of all the nodes and edges of our dag to *blue*.
 
-```{r, fig.width=3, fig.height=3, fig.align='center'}
+```{r, 02_color_nodes, fig.width=3, fig.height=3, fig.align='center'}
 hlight <- list(nodes = nodes(dag), arcs = arcs(dag),
                col = "blue", textCol = "blue")
 pp <- graphviz.plot(dag, highlight = hlight)
@@ -119,7 +121,7 @@ pp <- graphviz.plot(dag, highlight = hlight)
 
 The look of the arcs can be customised as follows using the **edgeRenderInfo** function from Rgraphviz.
 
-```{r}
+```{r, 02_edge_render_info}
 edgeRenderInfo(pp) <- list(col = c("S~E" = "black", "E~R" = "black"),
                            lwd = c("S~E" = 3, "E~R" = 3))
 ```
@@ -134,7 +136,7 @@ Similarly, we can highlight nodes with nodeRenderInfo. We set their
 colour and the colour of the node labels to black and their background to
 grey.
 
-```{r}
+```{r, 02_node_render_info}
 nodeRenderInfo(pp) <- list(col = c("S" = "black", "E" = "black", "R" = "black"),
                            fill = c("E" = "grey"))
 ```
@@ -142,7 +144,7 @@ nodeRenderInfo(pp) <- list(col = c("S" = "black", "E" = "black", "R" = "black"),
 Once we have made all the desired modifications, we can plot the DAG again
 with the **renderGraph** function from **Rgraphviz**.
 
-```{r, fig.width=3, fig.height=3, fig.align='center'}
+```{r, 02_render_graph, fig.width=3, fig.height=3, fig.align='center'}
 renderGraph(pp)
 ```
 
@@ -156,7 +158,7 @@ Given the DAG, the joint probability distribution of the survey data variables f
 
 $Pr(A, S, E, O, R, T) = Pr(A) Pr(S) Pr(E | A, S) Pr(O | E) Pr(R | E) Pr(T | O, R).$
 
-```{r}
+```{r, 02_cpt_build}
 A.lv <- c("young", "adult", "old")
 S.lv <- c("M", "F")
 E.lv <- c("high", "uni")
@@ -174,7 +176,7 @@ cpt <- list(A = A.prob, S = S.prob, E = E.prob, O = O.prob, R = R.prob, T = T.pr
 ```
 
 
-```{r}
+```{r, 02_custom_cpt}
 # custom cpt table
 cpt
 ```
@@ -183,12 +185,12 @@ Now that we have defined both the DAG and the local distribution corresponding
 to each variable, we can combine them to form a fully-specified BN. We combine the DAG we stored in dag and a list containing the local
 distributions, which we will call cpt, into an object of class **bn.fit** called bn.
 
-```{r}
+```{r, 02_custom_fit}
 # fit cpt table to network
 bn <- custom.fit(dag, cpt)
 ```
 
-## Estimating parameters of cpt tables
+## Estimating parameters of conditional probability tables
 
 For the hypothetical survey described in this chapter, we have assumed to
 know both the DAG and the parameters of the local distributions defining the
@@ -197,7 +199,7 @@ the knowledge possessed by one or more experts in the relevant fields. However, 
 
 Let's read the survey data:
 
-```{r}
+```{r, 02_head_survey}
 survey <- read.table("data/survey.txt", header = TRUE)
 head(survey)
 ```
@@ -215,7 +217,7 @@ the **custom.fit** function we used in the previous section; the latter
 constructs a BN using a set of custom parameters specified by the user, while
 the former estimates the same from the data.
 
-```{r}
+```{r, 02_bn_mle}
 bn.mle <- bn.fit(dag, data = survey, method = "mle")
 bn.mle
 ```
@@ -225,7 +227,7 @@ Note that we assume we know the structure of the network, so dag is an input of 
 As an alternative, we can also estimate the same conditional probabilities in
 a Bayesian setting, using their posterior distributions. In this case, the **method** argument of **bn.fit** must be set to **"bayes"**.
 
-```{r}
+```{r, 02_bn_bayes}
 bn.bayes <- bn.fit(dag, data = survey, method = "bayes", iss = 10)
 ```
 The estimated posterior probabilities are computed from a uniform prior over
@@ -236,7 +238,7 @@ an imaginary sample supporting the prior distribution.
 
 ### Fit dag to data and predict the value of latent variable
 
-```{r}
+```{r, 02_head_predicted}
 # predicting a variable in the test set.
 training = bn.fit(model2network("[A][B][E][G][C|A:B][D|B][F|A:D:E:G]"),
                   gaussian.test[1:2000, ])
@@ -276,7 +278,7 @@ and in this case G is said to be **faithful** or **isomorphic** to M.
 
 $\textbf{Definition.}$ A variable V is a **collider** or has a **V structure**, if it has 2 upcoming parents. 
 
-```{r, echo=FALSE, fig.cap="V is a collider", fig.align="center"}
+```{r, 02_colider_net, echo=FALSE, fig.cap="V is a collider", fig.align="center"}
 collider_net <- empty.graph(nodes = c("A","B","V"))
 arc.set <- matrix(c("A", "V",
                     "B", "V"),
@@ -288,7 +290,7 @@ graphviz.plot(collider_net)
 
 You can find all the **V structures** of a DAG:
 
-```{r}
+```{r, 02_vstructs}
 vstructs(dag)
 ```
 
@@ -305,7 +307,7 @@ We can investigate whether two nodes in a **bn** object are d-separated using
 the **dsep** function. **dsep** takes three arguments, x, y and z, corresponding to
 $\textbf{X}$, $\textbf{Y}$ and $\textbf{Z}$; the first two must be the names of two nodes being tested for d-separation, while the latter is an optional d-separating set. So, for example,
 
-```{r}
+```{r, 02_dsep}
 dsep(dag, x = "S", y = "R")
 dsep(dag, x = "O", y = "R")
 dsep(dag, x = "S", y = "R", z = "E")
@@ -339,13 +341,13 @@ same **equivalence class**.
 
 The skeleton of a network is the network without any direction. Here is the skeleton of the dag for survey dataset.
 
-```{r}
+```{r, 02_plot_skeleton}
 graphviz.plot(skeleton(dag))
 ```
 
 $\textbf{Theorem. (Equivalence classes)}$ Two DAGs defined over the same set of variables are equivalent and only  they have the same skeleton (i.e., the same underlying undirected graph) and the same v-structures.
 
-```{r}
+```{r, 02_learning_test}
 data(learning.test)
 learn.net1 = empty.graph(names(learning.test))
 learn.net2 = empty.graph(c("A","B","C","D","E","F"))
@@ -369,7 +371,7 @@ are part of one or more v-structures.
 
 The skeleton of a DAG and it's V structures identify the equivalence class the DAG belongs to, which is represented by the **completed partially directed graph (CPDAG)**. We can obtain it from a DAG with **cpdag** function.
 
-```{r}
+```{r, 02_plot_cpdag}
 X <- paste("[X1][X3][X5][X6|X8][X2|X1][X7|X5][X4|X1:X2]",
            "[X8|X3:X7][X9|X2:X7][X10|X1:X9]", sep = "")
 dag2 <- model2network(X)
@@ -397,7 +399,7 @@ This transformation is called **moralisation** because it "marries" non-adjacent
 parents sharing a common child. In the case of our example dag, we can
 create the moral graph with the **moral** function as follows:
 
-```{r}
+```{r, 02_plot_moral}
 graphviz.plot(moral(dag2))
 ```
 
@@ -420,7 +422,7 @@ functions to plot barcharts (**bn.fit.barchart**) and dot plots
 (**bn.fit.dotplot**) from bn.fit objects. Both functions are based on the
 lattice package. For example let's look at the conditional plot of $Pr(T | R,O)$:
 
-```{r}
+```{r, 02_barchart}
 bn.fit.barchart(bn.mle$T, main = "Travel",
                 xlab = "Pr(T | R,O)", ylab = "")
 ```

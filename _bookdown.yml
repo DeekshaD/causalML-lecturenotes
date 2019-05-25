@@ -1,0 +1,3 @@
+book_filename: "causalml.Rmd"
+edit: https://github.com/robertness/causalML-lecturenotes/edit/master/%s
+output_dir: "docs"
