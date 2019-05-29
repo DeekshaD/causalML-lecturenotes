@@ -127,7 +127,7 @@ DAG is a graphical language for reasoning about joint probability distribution, 
   If $Z$ is conditionally independent of $X$ given $Y$ we can write:
   $$P(X,Y,Z) = P(X)P(Y|X)P(Z|Y)$$
   
-  DAGs are useful for representing conditional independence relationship between variables. Lack of edges in DAG represent Conditional independence assumptions and hence, more such assumptions, lesser the edges in the graph. Conditional independence make DAGs more compact.
+  DAGs are useful for representing conditional independence relationship between variables. Lack of edges in DAG represent Conditional independence assumptions and hence, more such assumptions, lesser the edges in the graph. Conditional independence makes a DAG more compact.
 
 
 ### Core graphical concepts
@@ -138,12 +138,12 @@ A path in $\mathbb{G}$ is a sequence of (at least two) distinct vertices $i_1,..
 
 #### Pearl's d-separation
 
-Consider three disjoint set of variables, X,Y and Z represented as nodes in a graph $\mathbb{G}$. To test whether X is independent of Y given Z, we need to test whether the nodes corresponding to variables $Z$ "blocks" all paths from X to Y. This is defined by D-separation.
+Consider three disjoint set of variables, X,Y and Z represented as nodes in a graph $\mathbb{G}$. To test whether X is independent of Y given Z, we need to test whether the nodes corresponding to variables $Z$ "blocks" all paths from X to Y. This is defined by d-separation.
 Formally, a path $p$ is said to be d-separated by a set of nodes Z if and only if:
 1. $p$ contains a chain $i\to m\to j$ or a fork $i\leftarrow  m\to j$, such that the middle node $m$ is in $Z$
 2. p contains an inverted fork (or collide) $i\to m\leftarrow j$ such that the middle node
 m is not in Z and such that no descendant of $m$ is in $Z$.
-A set $Z$ is said to d-separated $X$ from $Y$ if and only if $Z$ *blocks* every path from a node in $X$
+A set $Z$ is said to d-separated $X$ from $Y$ if and only if $Z$ **blocks** every path from a node in $X$
 to a node in $Y$.
 
 ```{r fig.height=4, fig.width=4, echo=FALSE, fig.align='center', message=FALSE}
@@ -154,15 +154,14 @@ grid.raster(img)
 ```
 
 
-In the above picture, $U$ is conditionally independent of $W$, given $V$ in the first three cases. Intuitively, a causal chain(1&2) and causal forks(3), $U$ and $W$ are marginally dependent, but, become independent of each other when $V$ is known. Conditioning on $V$ appears to block the flow of information along the path, so learning about $U$ will not effect the probability of $W$, once $V$ is observed. 
+In the above picture, $U$ is conditionally independent of $W$, given $V$ in the first three cases. Intuitively, in causal chains(1&2) and causal forks(3), $U$ and $W$ are marginally dependent, but, become independent of each other when $V$ is known. Conditioning on $V$ appears to block the flow of information along the path, so learning about $U$ will not effect the probability of $W$, once $V$ is observed. 
 
-For example, in structure 1, consider $U$ to be Grandparent's gene, $V$ the parent's gene and $W$ is your gene information, and we know everything about the parent's gene($U$). Now, there is no new information about your genes that the grandparent's gene($U$) can provide, given the parent's gene($V$). A similar blockage of information in observed in the second case.
-In structure 3(common parent), $V$ is the parent's gene, if $U$ is the sibling's gene, $W$ is your gene. Now once the parent's gene is know, theses no new information the sibling's gene can provide, once the parent's gene is known.
+For example, in structure 1, consider $U$ to be Grandparent's genome, $V$ the parent's genome and $W$ is your genome information, and we know everything about the parent's genome($U$). Now, there is no new information about your genome that your grandparent's genome($U$) can provide, given the parent's genome($V$). A similar blockage of information in observed in the second case. In structure 3(common parent), $V$ is the parent's genome, if $U$ is the sibling's genome, $W$ is your genome. Now once the parent's genome is know, theses no new information the sibling's genome can provide that can explain your genome.
 
 #### V-structures
 
 V-structures, also know as colliders, or inverted forks, work in a different way. V-structures represents two causes having a common effect(structure 4 in the above figure). On observing the middle variable(effect $V$), the two extreme variables(causes $U$ and $W$) which were marginally independent, will now have an unblocked path between them, making them dependent, and this is true for any descendant for $V$
-However, if the effect is not observed, the two variables causing it, will remain independent.
+However, if the effect is not observed, the two variables causing it will remain independent.
 
 This is a little unintuitive, so let us consider a simple example of a sprinkler.
 ```{r fig.height=4, fig.width =4, echo=FALSE, fig.align='center', message=FALSE}
@@ -174,17 +173,16 @@ grid.raster(img)
 
 
 
-Grass will be **wet** by two causes: when it rains(Rain = **yes**); when the sprinkler is on(sprinkle = **on**). 
-Now lets say, we have observed that the grass is wet, and we know by some means(Google weather maybe) that it has not rained(Rain = **no**). We now can conclude that the sprinkler was on(sprinkler = **on**). Generally, there is no correlation between rain and sprinkler, they are independent, but, when we observe the grass(the effect), the path is now **unblocked**, and induces dependence among the causes(rain and sprinkler) 
+Grass will be **wet** by two causes: when it rains(**Rain** = **yes**); when the sprinkler is on(**sprinkler** = **on**). Now lets say, we have observed that the grass is wet, and by some means(say, Google weather) we have the information that it has not rained(**Rain** = **no**). We now can conclude that the sprinkler was on(**sprinkler** = **on**). Generally, there is no correlation between rain and sprinkler, they are independent, but, when we observe the grass(the effect), the path is now **unblocked**, and this induces dependence among the causes(rain and sprinkler) 
 
-This corresponds to the general pattern of causal relationships, observations on a common consequence of two independent causes tend to render those causes dependent, because information about one of the causes tends
+This corresponds to the general pattern of causal relationships: observations on a common consequence of two independent causes tend to render those causes dependent, because information about one of the causes tends
 to make the other more or less likely, given that the consequence has occurred.
 
 There are two types of V-structures  
-1. immoral v-structure: V-structure in which the parents are **not** linked by an arc.  
-2. moral v-structure: V-structure in which the parents are linked by an arc.  
+1. **immoral v-structure**: V-structure in which the parents are **not** linked by an arc.  
+2. **moral v-structure**: V-structure in which the parents are linked by an arc.  
 
-```{r fig.height=4, fig.width=5, echo=FALSE, fig.align='left', message=FALSE}
+```{r fig.height=4, fig.width=5, echo=FALSE, fig.align='center', message=FALSE}
 img<- readPNG("fig/v-structures.png")
 grid.raster(img)
 ```
@@ -193,18 +191,14 @@ grid.raster(img)
 
 ### What does conditional independence have to do with causality?
 
-Consider 2 variables $X$ and $Y$, a correlation between them would mean that either $X$ causes $Y$ or $Y$ causes $X$. Correlation implies that one of the two variables is causal.  
-
-Consider a graph $\mathbb{G}$ with three variables, $X$, $Y$ and $Z$ modeled as $X\to Y\to Z$, whose joint probability can be factorized as 
+Consider 2 variables $X$ and $Y$, a correlation between them would mean that either $X$ causes $Y$ or $Y$ causes $X$. Correlation implies that one of the two variables is causal. Now, consider a graph $\mathbb{G}$ with three variables, $X$, $Y$ and $Z$ modeled as $X\to Y\to Z$, whose joint probability can be factorized as 
 $$P(X)P(Y|X)P(Z|Y)$$  
 
 This can lead to three equivalent factorization: 
 $$P(X)P(Y|X)P(Y|X,Z)$$
 $$P(Y)P(X|Y)P(Z|Y)$$ 
 $$P(Z)P(Y|Z)P(X|Y)$$
-And 3 equivalent DAGs. Now in such a case, correlation implies that one of these models, is a causal model. Using correlations, we may at least infer the existence of causal links from correlations, if not for a concrete causal graph.
-
-Conditional independence narrows down the causal negatives and reduces the problem to reasoning about the joint probability distribution to graph algorithms.
+And 3 equivalent DAGs. Now in such a case, correlation implies that one of these models, is a causal model. Using correlations, we may at least infer the existence of causal links from correlations, if not for a concrete causal graph. Conditional independence narrows down the causal negatives and reduces the problem to reasoning about the joint probability distribution to graph algorithms.
 
 R's **bnlearn** library, includes a function **d-sep**, and Python's **pgmpy** library with modules local_independencies and get_independencies, can be used to test for d-separation, or to get d-separated nodes.
 
@@ -214,31 +208,26 @@ R's **bnlearn** library, includes a function **d-sep**, and Python's **pgmpy** l
 
 The Markov blanket for a node in a graphical model contains all the variables that shield the node from the rest of the network. This means that the Markov blanket of a node is the only knowledge needed to predict the behavior of that node and its children.
 
-In terms of joint probability, this would mean that every set of nodes in the network is conditionally independent of $A$, when conditioned on the Markov Blanket of $A$. Formally this can be written as
+In terms of joint probability, this would mean that every set of nodes in the network is conditionally independent of $A$, when conditioned on the Markov Blanket of $A$. Formally, 
 $${P(A\mid \operatorname {MB} (A),B)=P(A\mid \operatorname {MB} (A))}$$
 Where ${\operatorname {MB}(A)}$ is the set of nodes in the Markov Blanket of $A$
-
-In Bayesian networks, the Markov blanket of node A includes its parents, children and the other parents of all of its children. The Markov Blanket, d-separates A from all other nodes.
-
 
 
 ```{r fig.height=3, fig.width =3, echo=FALSE, fig.align='center', message=FALSE}
 img<- readPNG("fig/markovBlanket.png")
 grid.raster(img)
 ```
-
-  
-
-So, if we were fitting a model, and we  want to include the Markov Blanket as predictors, any other predictor we add, is over fitting, since there is no new information that can be learnt using the other predictors.  
+In Bayesian networks, the Markov blanket of node A includes its **parents**, **children** and the **other parents of all of its children**. In the above figure, the nodes in the blue circle is the Markov Blanket of node A. The Markov Blanket, d-separates A from all other nodes. If we were fitting a model, and we  want to include the Markov Blanket as predictors, any other predictor we add, is over fitting, since there is no new information that can be learnt using the other predictors.  
 
 #### Markov properties
 
-Global : A graph is globally Markov with respect to joint distribution if every d-sep inside the graph corresponds to conditional independence statement within the joint probability distribution ${P_\mathbb{X}}$.
+1. **Global** : A graph is globally Markov with respect to joint distribution if every d-sep inside the graph corresponds to conditional independence statement within the joint probability distribution ${P_\mathbb{X}}$.
   Formally,
 $${U \perp_{\mathbb{G}} W|V \implies U \perp_{P_\mathbb{X}} W|V }$$  
-Local : Every variable is conditionally independent of its non descendants given it parents. A well know example of local Markov property is a Markov chain.
-  * Markov factorization: If we can factorize a joint probability distribution by conditioning each node by its parents, then we satisfy Markov factorization property. This makes it a computational efficient way of evaluating the joint using logarithmic properties.
 
+2. **Local**: Every variable is conditionally independent of its non descendants given it parents. A well know example of local Markov property is a Markov chain.   
+
+3. **Markov factorization**: If we can factorize a joint probability distribution by conditioning each node by its parents, then we satisfy Markov factorization property. This makes it a computational efficient way of evaluating the joint using logarithmic properties.
   $${P_\mathbb{X}=x}=\pi(x_1,...,x_d) = \prod_{j=1}^{d} \pi(x_j|pa_{j}^{\mathbb{G})}$$
   $$log(\pi(x_1,...,x_d)) = \sum_{j=1}^{d} \pi(x_j|pa_{j}^{\mathbb{G}})$$
 
@@ -246,13 +235,15 @@ These three properties are equivalent definitions, if one of them is true, the o
 
 #### Markov equivalence 
 
-Conditional probability is given  as $P(A|B) = P(A,B)/P(B)$. Now, this definition means you can factorize any joint into a product of conditionals. Consider the joint factorization, $P(A, B, C) =  P(A)P(B|A)P(C|A, B)$. A DAG for such a factorization would have the edges {$A\to B, A\to C, B\to C$}. But, we can also factorize the joint, this way $P(A, B, C)=P(C)P(B|C)P(A|B,C)$, getting edges {$C\to B, B\to A, C\to A$}. So we have two different DAGs that are equivalent factorization of the joint probability. We call this equivalence a Markov equivalence. Generally, given a DAG, the set that includes that DAG and all the DAGs that are Markov equivalent to that DAG are called a Markov equivalence class.
+Conditional probability is given  as $P(A|B) = P(A,B)/P(B)$. Now, this definition means we can factorize any joint into a product of conditionals. Consider the joint factorization, $P(A, B, C) =  P(A)P(B|A)P(C|A, B)$.  
 
-When we have an equivalence class, we can look for some kind of isomorphism between two objects to test if they are equivalent, according to some definition of equivalence. The equivalence classes of DAGs have the same "skeleton", meaning the set of connections between nodes, but the direction of edges among some/all nodes would differ. **PDAG** is a compact representation of an equivalence class.  The PDAG has the same skeleton as all of the members of the equivalence class. The undirected edges in the PDAG correspond to edges that vary in direction among members of the class. A directed edge in the PDAG mean that  all members of the class have that edge oriented in that direction.
+A DAG for such a factorization would have the edges {$A\to B, A\to C, B\to C$}. But, we can also factorize the joint, this way $P(A, B, C)=P(C)P(B|C)P(A|B,C)$, with edges {$C\to B, B\to A, C\to A$}. So, we have two different DAGs that are equivalent factorization of the joint probability. We call this equivalence a **Markov equivalence**. Generally, given a DAG, the set that includes that DAG and all the DAGs that are Markov equivalent to that DAG are called a **Markov equivalence class**.
 
-There are other graphical representations of joint probability distributions  
-  * Undirected graph - doesn't admit causal reasoning
-  * Ancestral graphs - Doesn't directly map to a generative model
+When we have an equivalence class, we can look for some kind of isomorphism between two objects to test if they are equivalent, according to some definition of equivalence. The equivalence classes of DAGs have the same "skeleton", meaning the set of connections between nodes, but the direction of edges among some/all nodes would differ. **PDAG** is a compact representation of an equivalence class, and this serves well when its hard to enumerate the entire equivalence class of objects.  The PDAG has the same skeleton as all of the members of the equivalence class. The undirected edges in the PDAG correspond to edges that vary in direction among members of the class. A directed edge in the PDAG mean that  all members of the class have that edge oriented in that direction.
+
+There are other graphical representations of joint probability distribution  
+1. Undirected graph - All edges are bidirectional, and does not admit causal reasoning.    
+2. Ancestral graphs - A type of mixed graph to provide a graphical representation for the result of marginalizing one or more vertices in a graphical model, this does not directly map to a generative model.
 
 ## Causality and DAGs
   * Assume no latent variables (very strong assumption)
