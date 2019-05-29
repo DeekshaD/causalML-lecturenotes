@@ -19,8 +19,8 @@ knitr::opts_chunk$set(fig.path="fig/")
 ```
 
 ```{r, echo=FALSE}
-#library(reticulate)
-#use_virtualenv('venv', require=TRUE)
+library(reticulate)
+use_virtualenv('venv', require=TRUE)
 ```
 
 # Reasoning about DAGs
@@ -30,10 +30,10 @@ knitr::opts_chunk$set(fig.path="fig/")
 3. Scribes (publish first)
 
 
-```{r}
-#import torch
-#import pyro
-#pyro.set_rng_seed(101)
+```{python}
+import torch
+import pyro
+pyro.set_rng_seed(101)
 ```
 
 ## Recap: Causal models as generative models
